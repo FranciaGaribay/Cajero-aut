@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #cajero {
+            background-color: #4caf50; 
+            padding: 80px;
+            border-radius: 20px; /* Esquinas ovaladas */
+            display: inline-block; /* Alinea el contenedor en línea */
+        }
+
+        
+    </style>
+    <title>Cajero Automático</title>
+</head>
+<body>
+    <h1>Cajero Automático</h1>
+
+    <div id="cajero">
+        <!-- Contenedor del cajero -->
+        <label for="cuenta">Selecciona tu cuenta:</label>
+        <select id="cuenta">
+            <option value="0">Pedro</option>
+            <option value="1">Isabel</option>
+            <option value="2">Lily</option>
+        </select>
+
+        <br>
+
+        <label for="password">Ingresa tu contraseña:</label>
+        <input type="password" id="password">
+
+        <br>
+
+        <button onclick="iniciarSesion()">Iniciar Sesión</button>
+
+        <div id="operaciones" style="display:none;">
+            <h2>Selecciona una operación:</h2>
+            <button onclick="consultarSaldo()">Consultar Saldo</button>
+            <button onclick="ingresarMonto()">Ingresar Monto</button>
+            <button onclick="retirarMonto()">Retirar Monto</button>
+
+            <div id="resultado"></div>
+        </div>
+    </div>
+
+    <script>
+        var cuentas = [
+            { nombre: "Pedro", saldo: 200 },
+            { nombre: "Isabel", saldo: 290 },
+            { nombre: "Lily", saldo: 67 }
+        ];
+
+        var cuentaSeleccionada = null;
+
+        function iniciarSesion() {
+            var seleccion = document.getElementById("cuenta");
+            var passwordInput = document.getElementById("password");
+            cuentaSeleccionada = seleccion.value;
+
+            if (cuentaSeleccionada >= 0 && cuentaSeleccionada < cuentas.length) {
+                var password = prompt("Ingresa tu contraseña:");
+
+                if (password === "1234") { // Contraseña de ejemplo, puedes personalizarla
+                    document.getElementById("operaciones").style.display = "block";
+                    alert("¡Inicio de sesión exitoso!");
+                } else {
+                    alert("Contraseña incorrecta. Intenta nuevamente.");
+                    cuentaSeleccionada = null;
+                }
+            } else {
+                alert("Selecciona una cuenta válida.");
+                cuentaSeleccionada = null;
+            }
+        }
+
+        function consultarSaldo() {
+            mostrarResultado("Saldo actual: $" + cuentas[cuentaSeleccionada].saldo);
+        }
+
+        function ingresarMonto() {
+            var monto = parseFloat(prompt("Ingresa el monto a ingresar:"));
+
+            if (!isNaN(monto) && monto > 0) {
+                cuentas[cuentaSeleccionada].saldo += monto;
+                mostrarResultado("Ingreso exitoso. Nuevo saldo: $" + cuentas[cuentaSeleccionada].saldo);
+            } else {
+                mostrarResultado("Error: Ingresa un monto válido.");
+            }
+        }
+
+        function retirarMonto() {
+            var monto = parseFloat(prompt("Ingresa el monto a retirar:"));
+
+            if (!isNaN(monto) && monto > 0) {
+                if (cuentas[cuentaSeleccionada].saldo - monto >= 10 && cuentas[cuentaSeleccionada].saldo - monto <= 990) {
+                    cuentas[cuentaSeleccionada].saldo -= monto;
+                    mostrarResultado("Retiro exitoso. Nuevo saldo: $" + cuentas[cuentaSeleccionada].saldo);
+                } else {
+                    mostrarResultado("Error: El monto debe estar entre $10 y $990.");
+                }
+            } else {
+                mostrarResultado("Error: Ingresa un monto válido.");
+            }
+        }
+
+        function mostrarResultado(mensaje) {
+            document.getElementById("resultado").innerHTML = mensaje;
+        }
+    </script>
+</body>
+</html>
